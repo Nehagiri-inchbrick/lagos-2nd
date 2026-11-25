@@ -669,166 +669,6 @@ textarea {
 }
 
 /* --------------------------------------------------------------------------
-   7. INVESTMENT PILLARS SECTION
-   -------------------------------------------------------------------------- */
-.investment-pillars-section {
-  padding: 100px 0;
-  background: var(--bg-surface);
-  position: relative;
-}
-
-/* Subtle decorative border lines top/bottom */
-.investment-pillars-section::before,
-.investment-pillars-section::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--gold-rule) 30%, var(--gold-rule) 70%, transparent);
-}
-
-.investment-pillars-section::before {
-  top: 0;
-}
-
-.investment-pillars-section::after {
-  bottom: 0;
-}
-
-.pillars-section-title-wrap {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  justify-content: center;
-  margin-bottom: 64px;
-}
-
-.title-gold-line {
-  flex: 1;
-  max-width: 120px;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--gold-rule));
-}
-
-.title-gold-line:last-child {
-  background: linear-gradient(to left, transparent, var(--gold-rule));
-}
-
-.pillars-section-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--gold);
-  white-space: nowrap;
-}
-
-/* 3-column executive grid */
-.pillars-executive-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.executive-pillar-card {
-  position: relative;
-  background: var(--bg-card);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-card);
-  padding: 44px 36px;
-  text-align: center;
-  transition: all var(--transition-std);
-  overflow: hidden;
-  box-shadow: var(--shadow-card);
-}
-
-.executive-pillar-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 0%, rgba(181, 146, 61, 0.05) 0%, transparent 70%);
-  opacity: 0;
-  transition: opacity var(--transition-std);
-  pointer-events: none;
-}
-
-.executive-pillar-card:hover {
-  border-color: var(--gold-border);
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-elevated), 0 0 0 1px rgba(181, 146, 61, 0.10) inset;
-}
-
-.executive-pillar-card:hover::before {
-  opacity: 1;
-}
-
-/* Featured (middle) pillar */
-.featured-pillar-card {
-  background: linear-gradient(160deg, #fff 0%, var(--gold-pale) 100%);
-  border-color: var(--gold-border);
-  box-shadow: var(--shadow-card), 0 0 0 1px rgba(181, 146, 61, 0.08) inset;
-}
-
-/* Top gold accent stripe */
-.card-gold-accent-top {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(to right, transparent, var(--gold), transparent);
-  opacity: 0;
-  transition: opacity var(--transition-std);
-}
-
-.executive-pillar-card:hover .card-gold-accent-top,
-.featured-pillar-card .card-gold-accent-top {
-  opacity: 1;
-}
-
-.pillar-icon-symbol {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 68px;
-  height: 68px;
-  margin: 0 auto 24px;
-  border-radius: 50%;
-  background: var(--gold-muted);
-  border: 1px solid var(--gold-border);
-}
-
-.icon-emoji {
-  font-size: 28px;
-  line-height: 1;
-}
-
-.pillar-title {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--text-heading);
-  margin-bottom: 14px;
-  letter-spacing: 0.02em;
-}
-
-.pillar-sub-separator {
-  width: 32px;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--gold), transparent);
-  margin: 0 auto 16px;
-}
-
-.pillar-caption {
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 1.65;
-  color: var(--text-secondary);
-}
-
-/* --------------------------------------------------------------------------
    8. DEVELOPER PORTFOLIO SECTION
    -------------------------------------------------------------------------- */
 .developer-portfolio-section {
@@ -876,27 +716,30 @@ textarea {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 20px 36px;
+  gap: 28px 56px;
 }
 
-.dev-monochrome-item {
-  font-family: 'Outfit', sans-serif;
-  font-size: 20px;
-  font-weight: 300;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  transition: color var(--transition-std);
+.dev-logo-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
 }
 
-.dev-monochrome-item:hover {
-  color: var(--gold);
+.dev-logo-img {
+  height: 94px;
+  width: auto;
+  max-width: 280px;
+  object-fit: contain;
+  opacity: 0.85;
+  filter: grayscale(100%);
+  transition: all var(--transition-std);
 }
 
-.dev-monochrome-dot {
-  color: var(--gold);
-  font-size: 20px;
-  opacity: 0.5;
+.dev-logo-item:hover .dev-logo-img {
+  opacity: 1;
+  filter: grayscale(0%);
+  transform: translateY(-2px);
 }
 
 /* --------------------------------------------------------------------------
@@ -1161,17 +1004,17 @@ textarea {
    9. EXPO MEMORIES — INFINITE DRAGGABLE GALLERY
    -------------------------------------------------------------------------- */
 .nri-fest-drag {
-  --drag-gold: #c99c56;
+  --drag-gold: var(--gold);
   --border-radius: 12px;
   --hover-scale: 1.04;
   position: relative;
   background:
-    radial-gradient(ellipse 55% 35% at 50% 0%, rgba(201, 156, 86, 0.1), transparent 55%),
-    linear-gradient(180deg, #0a101c 0%, #121c2e 40%, #0a101c 100%);
-  color: #ffffff;
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(181, 146, 61, 0.08), transparent 60%),
+    linear-gradient(180deg, var(--bg-root) 0%, var(--bg-surface) 50%, var(--bg-root) 100%);
+  color: var(--text-heading);
   padding: clamp(2.5rem, 5vw, 3.5rem) 0 0;
   overflow: hidden;
-  border-top: 1px solid rgba(201, 156, 86, 0.2);
+  border-top: 1px solid var(--gold-rule);
   scroll-margin-top: 96px;
 }
 
@@ -1200,7 +1043,7 @@ textarea {
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.12;
-  color: #ffffff;
+  color: var(--text-heading);
   text-transform: none;
 }
 
@@ -1213,7 +1056,7 @@ textarea {
 .nri-fest-drag-head>p {
   margin: 0;
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.62);
+  color: var(--text-secondary);
 }
 
 .nri-fest-drag-viewport {
@@ -1226,8 +1069,8 @@ textarea {
   touch-action: none;
   user-select: none;
   background:
-    radial-gradient(ellipse 50% 40% at 50% 40%, rgba(201, 156, 86, 0.08), transparent 60%),
-    #0a101c;
+    radial-gradient(ellipse 55% 45% at 50% 45%, rgba(181, 146, 61, 0.07), transparent 65%),
+    var(--bg-surface);
 }
 
 .nri-fest-drag-viewport.is-grabbing {
@@ -1245,8 +1088,9 @@ textarea {
   position: absolute;
   overflow: hidden;
   border-radius: var(--border-radius);
-  background: #151b28;
-  border: 1px solid rgba(201, 156, 86, 0.14);
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-card);
   cursor: pointer;
   transition: opacity 0.45s ease;
 }
@@ -1296,7 +1140,7 @@ textarea {
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(18, 16, 14, 0.55);
   pointer-events: none;
   transition: opacity 0.35s ease;
 }
@@ -1729,13 +1573,6 @@ textarea {
     display: none;
   }
 
-  .pillars-executive-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    max-width: 480px;
-    margin: 0 auto;
-  }
-
   .modal-panel {
     grid-template-columns: 1fr;
     max-height: 95vh;
@@ -1897,17 +1734,13 @@ textarea {
     display: none;
   }
 
-  .investment-pillars-section {
-    padding: 41px 0;
+  .monochrome-logos-row {
+    gap: 18px 28px;
   }
 
-  .pillars-section-title-wrap {
-    margin-bottom: 28px;
-    padding-bottom: 0;
-  }
-
-  .dev-monochrome-item {
-    font-size: 15px;
+  .dev-logo-img {
+    height: 42px;
+    max-width: 150px;
   }
 
   .footer-layout {
