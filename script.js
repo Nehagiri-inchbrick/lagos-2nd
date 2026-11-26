@@ -103,310 +103,112 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ============================================================
-  // 3. INFINITE DRAGGABLE GALLERY (Expo Memories)
+  // 3. EXPO MEMORIES SLIDER WITH BIG ARROWS
   // ============================================================
-  const initInfiniteDragGallery = () => {
-    const viewport = document.getElementById('nri-fest-drag-viewport');
-    const canvas = document.getElementById('nri-fest-drag-canvas');
-    const overlay = document.getElementById('nri-fest-drag-overlay');
-    if (!viewport || !canvas || !overlay) return;
+  const initExpoSlider = () => {
+    const track = document.getElementById('expoSliderTrack');
+    const prevBtn = document.getElementById('expoSliderPrev');
+    const nextBtn = document.getElementById('expoSliderNext');
+    const dotsWrap = document.getElementById('expoSliderDots');
+    const overlay = document.getElementById('expoSlideOverlay');
+    if (!track || !prevBtn || !nextBtn || !dotsWrap) return;
 
-    const dragImages = [
-      { src: 'assets/expo/DSC06351.webp', alt: 'Previous Dubai Property Expo highlight' },
-      { src: 'assets/expo/IMAGE 2.webp', alt: 'Previous Dubai Property Expo showcase' },
-      { src: 'assets/expo/image 3.webp', alt: 'Previous Dubai Property Expo investor briefing' },
-      { src: 'assets/expo/image 5.webp', alt: 'Previous Dubai Property Expo private suite' },
-      { src: 'assets/expo/IMAGE 6.webp', alt: 'Previous Dubai Property Expo presentation' },
-      { src: 'assets/expo/IMAGE 8.webp', alt: 'Previous Dubai Property Expo guests' }
-    ];
+    const slides = Array.from(track.querySelectorAll('.expo-slide-card'));
+    let currentIndex = 0;
+    let lightboxEl = null;
 
-    const settings = {
-      baseWidth: 280,
-      smallHeight: 220,
-      largeHeight: 340,
-      itemGap: 28,
-      dragEase: 0.08,
-      momentumFactor: 180,
-      bufferZone: 2.2,
-      zoomDuration: 450
+    const getVisibleCount = () => {
+      if (window.innerWidth <= 700) return 1;
+      if (window.innerWidth <= 960) return 2;
+      return 3;
     };
 
-    const itemSizes = [
-      { width: settings.baseWidth, height: settings.smallHeight },
-      { width: settings.baseWidth, height: settings.largeHeight }
-    ];
-    const columns = 4;
-    const itemCount = dragImages.length;
-    const cellWidth = settings.baseWidth + settings.itemGap;
-    const cellHeight = Math.max(settings.smallHeight, settings.largeHeight) + settings.itemGap;
+    const getMaxIndex = () => Math.max(0, slides.length - getVisibleCount());
 
-    let isDragging = false;
-    let startX = 0;
-    let startY = 0;
-    let targetX = viewport.clientWidth * 0.2;
-    let targetY = viewport.clientHeight * 0.15;
-    let currentX = targetX;
-    let currentY = targetY;
-    let dragVelocityX = 0;
-    let dragVelocityY = 0;
-    let lastDragTime = 0;
-    let mouseHasMoved = false;
-    const visibleItems = new Set();
-    let lastUpdateTime = 0;
-    let lastX = currentX;
-    let lastY = currentY;
-    let isExpanded = false;
-    let activeItem = null;
-    let activeItemId = null;
-    let canDrag = true;
-    let originalPosition = null;
-    let expandedItem = null;
-
-    const getItemSize = (row, col) => itemSizes[Math.abs((row * columns + col) % itemSizes.length)];
-    const getItemId = (col, row) => `${col},${row}`;
-    const getItemPosition = (col, row) => ({ x: col * cellWidth, y: row * cellHeight });
-
-    const updateVisibleItems = () => {
-      const buffer = settings.bufferZone;
-      const viewWidth = viewport.clientWidth * (1 + buffer);
-      const viewHeight = viewport.clientHeight * (1 + buffer);
-      const startCol = Math.floor((-currentX - viewWidth / 2) / cellWidth);
-      const endCol = Math.ceil((-currentX + viewWidth * 1.5) / cellWidth);
-      const startRow = Math.floor((-currentY - viewHeight / 2) / cellHeight);
-      const endRow = Math.ceil((-currentY + viewHeight * 1.5) / cellHeight);
-      const currentItems = new Set();
-
-      for (let row = startRow; row <= endRow; row += 1) {
-        for (let col = startCol; col <= endCol; col += 1) {
-          const itemId = getItemId(col, row);
-          currentItems.add(itemId);
-          if (visibleItems.has(itemId)) continue;
-          if (activeItemId === itemId && isExpanded) continue;
-
-          const itemSize = getItemSize(row, col);
-          const position = getItemPosition(col, row);
-          const itemData = dragImages[Math.abs((row * columns + col) % itemCount)];
-
-          const item = document.createElement('div');
-          item.className = 'nri-fest-drag-item';
-          item.id = `drag-${itemId}`;
-          item.style.width = `${itemSize.width}px`;
-          item.style.height = `${itemSize.height}px`;
-          item.style.left = `${position.x}px`;
-          item.style.top = `${position.y}px`;
-          item.dataset.width = String(itemSize.width);
-          item.dataset.height = String(itemSize.height);
-          item.dataset.itemId = itemId;
-
-          const media = document.createElement('div');
-          media.className = 'nri-fest-drag-item-media';
-          const img = document.createElement('img');
-          img.src = itemData.src;
-          img.alt = itemData.alt;
-          img.draggable = false;
-          img.decoding = 'async';
-          media.appendChild(img);
-          item.appendChild(media);
-
-          item.addEventListener('click', () => {
-            if (mouseHasMoved || isDragging) return;
-            if (isExpanded) closeExpandedItem();
-            else expandItem(item);
-          });
-
-          canvas.appendChild(item);
-          visibleItems.add(itemId);
-        }
+    const renderDots = () => {
+      const maxIdx = getMaxIndex();
+      dotsWrap.innerHTML = '';
+      for (let i = 0; i <= maxIdx; i += 1) {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'expo-slider-dot' + (i === currentIndex ? ' active' : '');
+        dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+        dot.addEventListener('click', () => goToSlide(i));
+        dotsWrap.appendChild(dot);
       }
+    };
 
-      visibleItems.forEach((itemId) => {
-        if (!currentItems.has(itemId) || (activeItemId === itemId && isExpanded)) {
-          const el = document.getElementById(`drag-${itemId}`);
-          if (el && el.parentNode === canvas) canvas.removeChild(el);
-          visibleItems.delete(itemId);
-        }
+    const goToSlide = (idx) => {
+      const maxIdx = getMaxIndex();
+      if (idx < 0) currentIndex = maxIdx;
+      else if (idx > maxIdx) currentIndex = 0;
+      else currentIndex = idx;
+
+      const slideWidth = slides[0]?.getBoundingClientRect().width || 0;
+      const gap = 20;
+      track.style.transform = `translateX(-${currentIndex * (slideWidth + gap)}px)`;
+
+      dotsWrap.querySelectorAll('.expo-slider-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentIndex);
       });
     };
 
-    const expandItem = (item) => {
-      isExpanded = true;
-      activeItem = item;
-      activeItemId = item.dataset.itemId;
-      canDrag = false;
-      viewport.classList.remove('is-grabbing');
+    prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
+    nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
 
-      const imgEl = item.querySelector('img');
-      const itemWidth = Number(item.dataset.width);
-      const itemHeight = Number(item.dataset.height);
-      const rect = item.getBoundingClientRect();
-
-      originalPosition = {
-        rect,
-        width: itemWidth,
-        height: itemHeight
-      };
-
-      overlay.classList.add('is-active');
-
-      expandedItem = document.createElement('div');
-      expandedItem.className = 'nri-fest-drag-expanded';
-      const img = document.createElement('img');
-      img.src = imgEl.src;
-      img.alt = imgEl.alt;
-      expandedItem.appendChild(img);
-      expandedItem.addEventListener('click', closeExpandedItem);
-      document.body.appendChild(expandedItem);
-
-      canvas.querySelectorAll('.nri-fest-drag-item').forEach((el) => {
-        if (el !== activeItem) el.style.opacity = '0';
-      });
-
-      const scaleFactor = window.innerWidth <= 700 ? 0.86 : 0.42;
-      const targetWidth = Math.min(window.innerWidth * scaleFactor, 560);
-      const targetHeight = targetWidth * (itemHeight / itemWidth);
-      const startOffsetX = rect.left + itemWidth / 2 - window.innerWidth / 2;
-      const startOffsetY = rect.top + itemHeight / 2 - window.innerHeight / 2;
-
-      expandedItem.animate(
-        [
-          {
-            width: `${itemWidth}px`,
-            height: `${itemHeight}px`,
-            transform: `translate(calc(-50% + ${startOffsetX}px), calc(-50% + ${startOffsetY}px))`
-          },
-          {
-            width: `${targetWidth}px`,
-            height: `${targetHeight}px`,
-            transform: 'translate(-50%, -50%)'
-          }
-        ],
-        { duration: settings.zoomDuration, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' }
-      );
-    };
-
-    const closeExpandedItem = () => {
-      if (!expandedItem || !originalPosition) return;
-      const closingEl = expandedItem;
-      const orig = originalPosition;
-      const startOffsetX = orig.rect.left + orig.width / 2 - window.innerWidth / 2;
-      const startOffsetY = orig.rect.top + orig.height / 2 - window.innerHeight / 2;
-      const scaleFactor = window.innerWidth <= 700 ? 0.86 : 0.42;
-      const targetWidth = Math.min(window.innerWidth * scaleFactor, 560);
-      const targetHeight = targetWidth * (orig.height / orig.width);
-
-      overlay.classList.remove('is-active');
-      canvas.querySelectorAll('.nri-fest-drag-item').forEach((el) => {
-        el.style.opacity = '1';
-      });
-
-      const anim = closingEl.animate(
-        [
-          {
-            width: `${targetWidth}px`,
-            height: `${targetHeight}px`,
-            transform: 'translate(-50%, -50%)'
-          },
-          {
-            width: `${orig.width}px`,
-            height: `${orig.height}px`,
-            transform: `translate(calc(-50% + ${startOffsetX}px), calc(-50% + ${startOffsetY}px))`
-          }
-        ],
-        { duration: settings.zoomDuration, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' }
-      );
-
-      anim.onfinish = () => {
-        closingEl.remove();
-        expandedItem = null;
-        isExpanded = false;
-        activeItem = null;
-        activeItemId = null;
-        originalPosition = null;
-        canDrag = true;
-        updateVisibleItems();
-      };
-    };
-
-    const animate = () => {
-      if (canDrag) {
-        currentX += (targetX - currentX) * settings.dragEase;
-        currentY += (targetY - currentY) * settings.dragEase;
-        canvas.style.transform = `translate(${currentX}px, ${currentY}px)`;
-
-        const now = Date.now();
-        if (Math.hypot(currentX - lastX, currentY - lastY) > 80 || now - lastUpdateTime > 120) {
-          updateVisibleItems();
-          lastX = currentX;
-          lastY = currentY;
-          lastUpdateTime = now;
-        }
-      }
-      requestAnimationFrame(animate);
-    };
-
-    const onPointerDown = (clientX, clientY) => {
-      if (!canDrag) return;
-      isDragging = true;
-      mouseHasMoved = false;
-      startX = clientX;
-      startY = clientY;
-      lastDragTime = Date.now();
-      viewport.classList.add('is-grabbing');
-    };
-
-    const onPointerMove = (clientX, clientY) => {
-      if (!isDragging || !canDrag) return;
-      const dx = clientX - startX;
-      const dy = clientY - startY;
-      if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
-        mouseHasMoved = true;
-        viewport.classList.add('has-moved');
-      }
-      const now = Date.now();
-      const dt = Math.max(10, now - lastDragTime);
-      lastDragTime = now;
-      dragVelocityX = dx / dt;
-      dragVelocityY = dy / dt;
-      targetX += dx;
-      targetY += dy;
-      startX = clientX;
-      startY = clientY;
-    };
-
-    const onPointerUp = () => {
-      if (!isDragging) return;
-      isDragging = false;
-      viewport.classList.remove('is-grabbing');
-      if (canDrag && (Math.abs(dragVelocityX) > 0.1 || Math.abs(dragVelocityY) > 0.1)) {
-        targetX += dragVelocityX * settings.momentumFactor;
-        targetY += dragVelocityY * settings.momentumFactor;
-      }
-    };
-
-    viewport.addEventListener('mousedown', (e) => onPointerDown(e.clientX, e.clientY));
-    window.addEventListener('mousemove', (e) => onPointerMove(e.clientX, e.clientY));
-    window.addEventListener('mouseup', onPointerUp);
-
-    viewport.addEventListener('touchstart', (e) => {
-      if (e.touches[0]) onPointerDown(e.touches[0].clientX, e.touches[0].clientY);
+    // Touch swipe support
+    let touchStartX = 0;
+    track.addEventListener('touchstart', (e) => {
+      if (e.touches[0]) touchStartX = e.touches[0].clientX;
     }, { passive: true });
-    window.addEventListener('touchmove', (e) => {
-      if (e.touches[0] && isDragging) onPointerMove(e.touches[0].clientX, e.touches[0].clientY);
+    track.addEventListener('touchend', (e) => {
+      if (!e.changedTouches[0]) return;
+      const diff = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) goToSlide(currentIndex + (diff > 0 ? 1 : -1));
     }, { passive: true });
-    window.addEventListener('touchend', onPointerUp);
 
-    overlay.addEventListener('click', () => {
-      if (isExpanded) closeExpandedItem();
+    // Lightbox on image click
+    const closeLightbox = () => {
+      if (!lightboxEl) return;
+      overlay?.classList.remove('is-active');
+      lightboxEl.classList.remove('is-active');
+      const closing = lightboxEl;
+      lightboxEl = null;
+      setTimeout(() => closing.remove(), 280);
+    };
+
+    slides.forEach((card) => {
+      card.addEventListener('click', () => {
+        const img = card.querySelector('img');
+        if (!img || !overlay) return;
+        overlay.classList.add('is-active');
+        lightboxEl = document.createElement('div');
+        lightboxEl.className = 'expo-slide-lightbox';
+        const fullImg = document.createElement('img');
+        fullImg.src = img.src;
+        fullImg.alt = img.alt;
+        lightboxEl.appendChild(fullImg);
+        lightboxEl.addEventListener('click', closeLightbox);
+        document.body.appendChild(lightboxEl);
+        requestAnimationFrame(() => lightboxEl?.classList.add('is-active'));
+      });
     });
+
+    overlay?.addEventListener('click', closeLightbox);
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && isExpanded) closeExpandedItem();
+      if (e.key === 'Escape') closeLightbox();
     });
 
-    updateVisibleItems();
-    animate();
+    window.addEventListener('resize', () => {
+      renderDots();
+      goToSlide(Math.min(currentIndex, getMaxIndex()));
+    }, { passive: true });
+
+    renderDots();
+    goToSlide(0);
   };
 
-  initInfiniteDragGallery();
+  initExpoSlider();
 
   // ============================================================
   // 5. APPLE-STYLE DETAIL INSPECTION MODAL

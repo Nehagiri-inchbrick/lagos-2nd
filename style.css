@@ -247,7 +247,7 @@ textarea {
    -------------------------------------------------------------------------- */
 .brand-header {
   position: absolute;
-  top: 33px;
+  top: 0;
   left: 0;
   width: 100%;
   z-index: 95;
@@ -427,11 +427,19 @@ textarea {
 
 .hero-headline .gold-gradient-text {
   display: inline-block;
-  font-style: italic;
-  font-weight: 600;
-  font-size: 1.08em;
-  letter-spacing: 0.06em;
-  margin-top: 4px;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1em;
+  letter-spacing: inherit;
+  margin-top: 2px;
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: #f5d060;
+  -webkit-text-fill-color: #f5d060;
+  text-shadow: none;
+  filter: none;
+  animation: none;
 }
 
 @keyframes goldShimmer {
@@ -451,6 +459,22 @@ textarea {
   height: 2px;
   background: linear-gradient(to right, var(--gold), var(--gold-light), transparent);
   border-radius: 2px;
+}
+
+.hero-audience-kicker {
+  display: inline-block;
+  width: fit-content;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #f5d060;
+  padding: 6px 14px;
+  background: rgba(181, 146, 61, 0.16);
+  border-left: 2px solid #ffd700;
+  border-radius: 0 6px 6px 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
 }
 
 .hero-subheadline {
@@ -1035,14 +1059,13 @@ textarea {
    -------------------------------------------------------------------------- */
 .nri-fest-drag {
   --drag-gold: var(--gold);
-  --border-radius: 12px;
-  --hover-scale: 1.04;
+  --border-radius: 14px;
   position: relative;
   background:
     radial-gradient(ellipse 60% 40% at 50% 0%, rgba(181, 146, 61, 0.08), transparent 60%),
     linear-gradient(180deg, var(--bg-root) 0%, var(--bg-surface) 50%, var(--bg-root) 100%);
   color: var(--text-heading);
-  padding: clamp(2.5rem, 5vw, 3.5rem) 0 0;
+  padding: clamp(2.75rem, 5vw, 4.25rem) 0;
   overflow: hidden;
   border-top: 1px solid var(--gold-rule);
   scroll-margin-top: 96px;
@@ -1052,8 +1075,7 @@ textarea {
   position: relative;
   z-index: 5;
   text-align: center;
-  margin-bottom: 1.25rem;
-  pointer-events: none;
+  margin-bottom: 2rem;
 }
 
 .nri-fest-drag-eyebrow {
@@ -1084,74 +1106,122 @@ textarea {
 }
 
 .nri-fest-drag-head>p {
-  margin: 0;
-  font-size: 0.9rem;
+  margin: 0 auto;
+  max-width: 620px;
+  font-size: 0.92rem;
   color: var(--text-secondary);
 }
 
-.nri-fest-drag-viewport {
+.expo-slider-shell {
   position: relative;
-  width: 100%;
-  height: min(78vh, 720px);
-  min-height: 480px;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 42px;
+}
+
+.expo-slider-viewport {
   overflow: hidden;
-  cursor: grab;
-  touch-action: none;
-  user-select: none;
-  background:
-    radial-gradient(ellipse 55% 45% at 50% 45%, rgba(181, 146, 61, 0.07), transparent 65%),
-    var(--bg-surface);
+  border-radius: var(--border-radius);
 }
 
-.nri-fest-drag-viewport.is-grabbing {
-  cursor: grabbing;
-}
-
-.nri-fest-drag-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
+.expo-slider-track {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
 }
 
-.nri-fest-drag-item {
-  position: absolute;
-  overflow: hidden;
+.expo-slide-card {
+  flex: 0 0 calc((100% - 40px) / 3);
+  height: 380px;
   border-radius: var(--border-radius);
+  overflow: hidden;
   background: var(--bg-card);
   border: 1px solid var(--border-soft);
   box-shadow: var(--shadow-card);
-  cursor: pointer;
-  transition: opacity 0.45s ease;
+  cursor: zoom-in;
 }
 
-.nri-fest-drag-item-media {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-.nri-fest-drag-item img {
+.expo-slide-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.35s ease;
-  transform: scale(1);
+  transition: transform 0.45s ease;
 }
 
-.nri-fest-drag-item:hover img {
-  transform: scale(var(--hover-scale));
+.expo-slide-card:hover img {
+  transform: scale(1.04);
+}
+
+.expo-slider-arrow {
+  position: absolute;
+  top: calc(50% - 18px);
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1.5px solid var(--gold-border);
+  color: var(--text-heading);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.expo-slider-prev {
+  left: 12px;
+}
+
+.expo-slider-next {
+  right: 12px;
+}
+
+.expo-slider-arrow:hover {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+  border-color: var(--gold);
+  color: #ffffff;
+  box-shadow: 0 14px 34px rgba(181, 146, 61, 0.35);
+  transform: translateY(-50%) scale(1.06);
+}
+
+.expo-slider-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.expo-slider-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(18, 16, 14, 0.2);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.expo-slider-dot.active {
+  width: 26px;
+  background: var(--gold);
 }
 
 .nri-fest-drag-overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.84);
+  background: rgba(10, 14, 24, 0.86);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   opacity: 0;
   pointer-events: none;
-  z-index: 20;
-  transition: opacity 0.45s ease;
+  z-index: 10002;
+  transition: opacity 0.35s ease;
 }
 
 .nri-fest-drag-overlay.is-active {
@@ -1159,53 +1229,79 @@ textarea {
   opacity: 1;
 }
 
-.nri-fest-drag-hint {
-  position: absolute;
-  left: 50%;
-  bottom: 1.1rem;
-  z-index: 6;
-  margin: 0;
-  transform: translateX(-50%);
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(18, 16, 14, 0.55);
-  pointer-events: none;
-  transition: opacity 0.35s ease;
-}
-
-.nri-fest-drag-viewport.has-moved .nri-fest-drag-hint {
-  opacity: 0;
-}
-
-.nri-fest-drag-expanded {
+.expo-slide-lightbox {
   position: fixed;
   left: 50%;
   top: 50%;
+  transform: translate(-50%, -50%) scale(0.94);
   z-index: 10004;
-  overflow: hidden;
+  max-width: min(90vw, 900px);
+  max-height: 84vh;
   border-radius: var(--border-radius);
-  cursor: zoom-out;
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 55, 0.35);
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65);
-  border: 1px solid rgba(201, 156, 86, 0.3);
+  opacity: 0;
+  transition: all 0.3s ease;
+  cursor: zoom-out;
 }
 
-.nri-fest-drag-expanded img {
+.expo-slide-lightbox.is-active {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.expo-slide-lightbox img {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  display: block;
+  max-height: 84vh;
+  object-fit: contain;
+  background: #0a0e18;
+}
+
+@media (max-width: 960px) {
+  .expo-slide-card {
+    flex: 0 0 calc((100% - 20px) / 2);
+    height: 340px;
+  }
 }
 
 @media (max-width: 700px) {
+  .nri-fest-drag-head {
+    padding: 0 20px;
+  }
+
   .nri-fest-drag-head h2 {
     font-size: clamp(1.65rem, 7.5vw, 2.1rem);
   }
 
-  .nri-fest-drag-viewport {
-    height: min(70vh, 560px);
-    min-height: 420px;
+  .expo-slider-shell {
+    padding: 0 16px;
+  }
+
+  .expo-slide-card {
+    flex: 0 0 100%;
+    height: 280px;
+  }
+
+  .expo-slider-arrow {
+    width: 48px;
+    height: 48px;
+    top: calc(50% - 14px);
+  }
+
+  .expo-slider-arrow svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .expo-slider-prev {
+    left: 24px;
+  }
+
+  .expo-slider-next {
+    right: 24px;
   }
 }
 
@@ -1618,18 +1714,8 @@ textarea {
     padding: 0 20px;
   }
 
-  .discreet-invitation-banner {
-    padding: 6px 0;
-  }
-
-  .tagline-text {
-    font-size: 8.5px;
-    letter-spacing: 0.11em;
-    line-height: 1.35;
-  }
-
   .brand-header {
-    top: 36px;
+    top: 0;
     padding: 12px 0;
   }
 
@@ -1653,9 +1739,15 @@ textarea {
   }
 
   .hero-grid-layout {
-    padding-top: 98px;
+    padding-top: 74px;
     padding-bottom: 24px;
     gap: 16px;
+  }
+
+  .hero-audience-kicker {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    padding: 4px 10px;
   }
 
   .hero-framing-content {
@@ -1805,14 +1897,9 @@ textarea {
 }
 
 @media (max-width: 480px) {
-  .tagline-text {
-    font-size: 7.5px;
-    letter-spacing: 0.08em;
-  }
-
   .brand-header {
-    top: 30px;
-    padding: 8px 0;
+    top: 0;
+    padding: 10px 0;
   }
 
   .brand-header .btn-sm {
@@ -1822,7 +1909,7 @@ textarea {
   }
 
   .hero-grid-layout {
-    padding-top: 86px;
+    padding-top: 66px;
     padding-bottom: 20px;
     gap: 12px;
   }

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -25,14 +25,8 @@
   <div class="ambient-glow ambient-glow-2"></div>
 
   <!-- =========================================================
-       1. BRAND HEADER & DISCREET INVITATION BANNER
+       1. BRAND HEADER
   ========================================================== -->
-  <aside class="discreet-invitation-banner" aria-label="Discreet Invitation Banner">
-    <div class="container banner-inner">
-      <span class="tagline-text">EXCLUSIVELY FOR OVERSEAS INDIANS IN LAGOS</span>
-    </div>
-  </aside>
-
   <header class="brand-header" id="header">
     <div class="container header-container">
       <div class="brand-identity">
@@ -67,6 +61,8 @@
             Property Expo<br>
             <span class="gold-gradient-text">Lagos | 5th &amp; 6th Dec</span>
           </h1>
+
+          <p class="hero-audience-kicker">EXCLUSIVELY FOR OVERSEAS INDIANS IN LAGOS</p>
 
           <p class="hero-subheadline">
             Meet senior developer representatives face-to-face from Emaar, Sobha, Damac, and Binghatti.
@@ -213,21 +209,55 @@
     </section>
 
     <!-- =========================================================
-         6. EXPO MEMORIES — Infinite Draggable Gallery
+         6. EXPO MEMORIES — Slider with Big Arrows
     ========================================================== -->
-    <section class="nri-fest-drag" id="expo-gallery" aria-labelledby="nri-fest-drag-title" data-drag-gallery>
+    <section class="nri-fest-drag" id="expo-gallery" aria-labelledby="nri-fest-drag-title">
       <div class="container nri-fest-drag-head">
         <span class="nri-fest-drag-eyebrow">PREVIOUS EXPO ARCHIVE &bull; LAGOS EDITION</span>
         <h2 id="nri-fest-drag-title">Relive our <em>previous Dubai expo</em></h2>
-        <p>Glide through highlights from our last private Lagos showcase &mdash; VIP suites, investor briefings, and
-          landmark previews. Select any frame to inspect.</p>
+        <p>Highlights from our last private Lagos showcase &mdash; VIP suites, investor briefings, and landmark previews.</p>
       </div>
 
-      <div class="nri-fest-drag-viewport" id="nri-fest-drag-viewport">
-        <div class="nri-fest-drag-canvas" id="nri-fest-drag-canvas"></div>
-        <div class="nri-fest-drag-overlay" id="nri-fest-drag-overlay"></div>
-        <p class="nri-fest-drag-hint" aria-hidden="true">Drag to explore</p>
+      <div class="expo-slider-shell">
+        <button type="button" class="expo-slider-arrow expo-slider-prev" id="expoSliderPrev" aria-label="Previous slide">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        <div class="expo-slider-viewport" id="expoSliderViewport">
+          <div class="expo-slider-track" id="expoSliderTrack">
+            <div class="expo-slide-card">
+              <img src="assets/expo/DSC06351.webp" alt="Previous Dubai Property Expo highlight" loading="lazy">
+            </div>
+            <div class="expo-slide-card">
+              <img src="assets/expo/IMAGE 2.webp" alt="Previous Dubai Property Expo showcase" loading="lazy">
+            </div>
+            <div class="expo-slide-card">
+              <img src="assets/expo/image 3.webp" alt="Previous Dubai Property Expo investor briefing" loading="lazy">
+            </div>
+            <div class="expo-slide-card">
+              <img src="assets/expo/image 5.webp" alt="Previous Dubai Property Expo private suite" loading="lazy">
+            </div>
+            <div class="expo-slide-card">
+              <img src="assets/expo/IMAGE 6.webp" alt="Previous Dubai Property Expo presentation" loading="lazy">
+            </div>
+            <div class="expo-slide-card">
+              <img src="assets/expo/IMAGE 8.webp" alt="Previous Dubai Property Expo guests" loading="lazy">
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="expo-slider-arrow expo-slider-next" id="expoSliderNext" aria-label="Next slide">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+
+        <div class="expo-slider-dots" id="expoSliderDots" role="tablist" aria-label="Slide pagination"></div>
       </div>
+
+      <div class="nri-fest-drag-overlay" id="expoSlideOverlay"></div>
     </section>
 
   </main>
